@@ -12,6 +12,10 @@
                     </th>
                     <th class="px-6 py-3 bg-gray-50 text-left">
                         <span
+                            class="text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Category</span>
+                    </th>
+                    <th class="px-6 py-3 bg-gray-50 text-left">
+                        <span
                             class="text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Content</span>
                     </th>
                     <th class="px-6 py-3 bg-gray-50 text-left">
@@ -29,6 +33,9 @@
                         {{ post.title }}
                     </td>
                     <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-900">
+                        {{ post.category }}
+                    </td>
+                    <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-900">
                         {{ post.content }}
                     </td>
                     <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-900">
@@ -38,18 +45,22 @@
                 </tbody>
             </table>
 
-            <TailwindPagination :data="posts" @pagination-change-page="getPosts" class="mt-4" />
+            <TailwindPagination :data="posts" @pagination-change-page="getPosts" class="mt-4"/>
         </div>
     </div>
 </template>
 
 <script setup>
 import {onMounted} from "vue";
+import {TailwindPagination} from 'laravel-vue-pagination';
 import usePosts from "@/composables/posts";
-import { TailwindPagination } from 'laravel-vue-pagination';
+import useCategories from "@/composables/categories";
 
 const {posts, getPosts} = usePosts()
+const {categories, getCategories} = useCategories()
+
 onMounted(() => {
     getPosts()
+    getCategories()
 })
 </script>
