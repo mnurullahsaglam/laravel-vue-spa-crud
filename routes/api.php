@@ -15,5 +15,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::singleton('posts', PostController::class);
-Route::singleton('categories', CategoryController::class);
+Route::apiResources([
+    'posts' => PostController::class,
+    'categories' => CategoryController::class,
+]);
