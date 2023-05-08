@@ -2,6 +2,7 @@ import './bootstrap';
 
 import { createApp } from 'vue'
 import { createRouter, createWebHistory } from 'vue-router'
+import App from './layouts/App.vue'
 import PostsIndex from './components/Posts/Index.vue'
 
 const routes = [
@@ -13,6 +14,6 @@ const router = createRouter({
     routes
 })
 
-createApp({})
+createApp(App)
     .use(router)
     .mount('#app')
