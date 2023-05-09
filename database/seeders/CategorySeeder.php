@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Category;
+use App\Models\Post;
 use Illuminate\Database\Seeder;
 
 class CategorySeeder extends Seeder
@@ -12,6 +13,14 @@ class CategorySeeder extends Seeder
      */
     public function run(): void
     {
-        Category::factory()->count(10)->hasPosts(7)->create();
+        Category::factory()
+            ->count(10)
+            ->afterCreating(function ($category) {
+                $postAmount = rand(0, 25);
+                $category->posts()->createMany(
+                    Post::factory()->count($postAmount)->make()->toArray()
+                );
+            })
+            ->create();
     }
 }
