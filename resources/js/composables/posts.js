@@ -73,7 +73,6 @@ export default function usePosts() {
     }
 
     const deletePost = async (id) => {
-        axios.delete('/api/posts/' + id)
         swal({
             title: 'Are you sure?',
             text: 'You won\'t be able to revert this action!',
@@ -86,7 +85,6 @@ export default function usePosts() {
             reverseButtons: true
         })
             .then(response => {
-                console.log(response)
                 if (response.isConfirmed) {
                     axios.delete('/api/posts/' + id)
                         .then(response => {
@@ -98,7 +96,7 @@ export default function usePosts() {
                         })
                         .catch(error => {
                             swal({
-                                icon: 'error', title: 'Something wasdasdent wrong'
+                                icon: 'error', title: 'Something went wrong'
                             })
                         })
                 }
