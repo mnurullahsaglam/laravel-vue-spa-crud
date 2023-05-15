@@ -1,4 +1,4 @@
-import {ref} from 'vue'
+import {ref, inject} from 'vue'
 import {useRouter} from 'vue-router'
 
 export default function usePosts() {
@@ -7,6 +7,7 @@ export default function usePosts() {
     const router = useRouter()
     const validationErrors = ref({})
     const isLoading = ref(false)
+    const swal = inject('$swal')
 
     const getPosts = async (page = 1, category = '', order_column = 'created_at', order_direction = 'desc') => {
         axios.get('/api/posts?page=' + page + '&category=' + category + '&order_column=' + order_column + '&order_direction=' + order_direction)
@@ -38,6 +39,9 @@ export default function usePosts() {
         axios.post('/api/posts', serializedPost)
             .then(response => {
                 router.push({name: 'posts.index'})
+                swal({
+                    icon: 'success', title: 'Post saved successfully'
+                })
             })
             .catch(error => {
                 if (error.response?.data) {
@@ -56,6 +60,9 @@ export default function usePosts() {
         axios.put('/api/posts/' + post.id, post)
             .then(response => {
                 router.push({name: 'posts.index'})
+                swal({
+                    icon: 'success', title: 'Post saved successfully'
+                })
             })
             .catch(error => {
                 if (error.response?.data) {
@@ -65,5 +72,43 @@ export default function usePosts() {
             .finally(() => isLoading.value = false)
     }
 
-    return {posts, post, getPosts, getPost, storePost, updatePost, validationErrors, isLoading}
+    const deletePost = async (id) => {
+        axios.delete('/api/posts/' + id)
+        swal({
+            title: 'Are you sure?',
+            text: 'You won\'t be able to revert this action!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, delete it!',
+            confirmButtonColor: '#ef4444',
+            timer: 20000,
+            timerProgressBar: true,
+            reverseButtons: true
+        })
+            .then(response => {
+                console.log(response)
+                if (response.isConfirmed) {
+                    axios.delete('/api/posts/' + id)
+                        .then(response => {
+                            getPosts()
+                            router.push({name: 'posts.index'})
+                            swal({
+                                icon: 'success', title: 'Post deleted successfully'
+                            })
+                        })
+                        .catch(error => {
+                            swal({
+                                icon: 'error', title: 'Something wasdasdent wrong'
+                            })
+                        })
+                }
+            })
+            .catch(error => {
+                swal({
+                    icon: 'error', title: 'Something went wrong'
+                })
+            })
+    }
+
+    return {posts, post, getPosts, getPost, storePost, updatePost, deletePost, validationErrors, isLoading}
 }

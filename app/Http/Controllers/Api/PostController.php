@@ -34,7 +34,9 @@ class PostController extends Controller
     {
         $request->file('thumbnail')->getClientOriginalName();
 
-        $post = Post::create($request->validated());
+        $post = Post::create($request->validated() + [
+            'thumbnail' => $request->file('thumbnail')->getClientOriginalName()
+        ]);
 
         return new PostResource($post);
     }
