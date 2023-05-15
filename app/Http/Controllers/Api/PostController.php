@@ -4,10 +4,10 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StorePostRequest;
+use App\Http\Requests\UpdatePostRequest;
 use App\Http\Resources\PostResource;
 use App\Models\Post;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
@@ -39,18 +39,22 @@ class PostController extends Controller
         return new PostResource($post);
     }
 
-    public function show(string $id)
+    public function show(Post $post)
     {
-        //
+        return new PostResource($post);
     }
 
-    public function update(Request $request, string $id)
+    public function update(UpdatePostRequest $request, Post $post)
     {
-        //
+        $post->update($request->validated());
+
+        return new PostResource($post);
     }
 
-    public function destroy(string $id)
+    public function destroy(Post $post)
     {
-        //
+        $post->delete();
+
+        return response()->noContent();
     }
 }
